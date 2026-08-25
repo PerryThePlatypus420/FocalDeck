@@ -7,3 +7,17 @@ This version has breaking changes — APIs, conventions, and file structure may 
 This block is written and re-added by `next dev` — verify at `node_modules/next/dist/server/lib/generate-agent-files.js`. Removing it from a diff only re-creates the uncommitted change; committing it with your work keeps the tree clean.
 
 <!-- END:nextjs-agent-rules -->
+
+## Coding preferences
+
+- Use TypeScript throughout the project.
+- Do not use `any`. Prefer explicit interfaces and types.
+- Use clear, meaningful names for variables, functions, and components.
+- Prefer named exports for components and utilities.
+- Build reusable UI with Shadcn UI and Tailwind CSS whenever needed.
+- Use Framer Motion for subtle motion and dnd-kit for drag-and-drop.
+- Keep components simple, readable, and maintainable.
+- Do not use emoji in code, UI text, or comments.
+- Use generated Supabase types for database and API payloads when available.
+- Do not manually recreate backend response types if the schema already provides them.
+- When writing or modifying code, briefly explain what it does, why the approach was chosen, and any important concepts involved.

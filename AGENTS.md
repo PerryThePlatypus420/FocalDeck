@@ -21,3 +21,6 @@ This block is written and re-added by `next dev` — verify at `node_modules/nex
 - Use generated Supabase types for database and API payloads when available.
 - Do not manually recreate backend response types if the schema already provides them.
 - When writing or modifying code, briefly explain what it does, why the approach was chosen, and any important concepts involved.
+- Before using or installing a package, check its official documentation for current APIs, package names, and recommended usage.
+- Prefer the latest stable official approach unless the project already uses a different version.
+- Do not rely on outdated package patterns when official documentation provides a newer replacement.

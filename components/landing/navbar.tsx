@@ -44,9 +44,6 @@ export function Navbar() {
             <Button asChild variant="ghost">
               <a href="/signin">Sign in</a>
             </Button>
-            <Button asChild>
-              <a href="/signup">Sign up</a>
-            </Button>
           </div>
         </div>
 
@@ -86,11 +83,6 @@ export function Navbar() {
                 <SheetClose asChild>
                   <Button asChild variant="ghost" className="justify-start">
                     <a href="/signin">Sign in</a>
-                  </Button>
-                </SheetClose>
-                <SheetClose asChild>
-                  <Button asChild className="justify-start">
-                    <a href="/signup">Sign up</a>
                   </Button>
                 </SheetClose>
               </div>

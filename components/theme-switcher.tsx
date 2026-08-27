@@ -2,6 +2,7 @@
 
 import { Monitor, Moon, Sun } from "lucide-react";
 import { useTheme } from "next-themes";
+import { useSyncExternalStore } from "react";
 
 import { Button } from "@/components/ui/button";
 import {
@@ -25,14 +26,31 @@ const themeOptions: Array<{
   { value: "dark", label: "Dark", icon: Moon },
 ];
 
+const subscribeToMount = () => () => {};
+const getClientMountState = () => true;
+const getServerMountState = () => false;
+
 export function ThemeSwitcher() {
   const { theme, resolvedTheme, setTheme } = useTheme();
+  const isMounted = useSyncExternalStore(
+    subscribeToMount,
+    getClientMountState,
+    getServerMountState,
+  );
   const selectedTheme: ThemeOption =
     theme === "light" || theme === "dark" || theme === "system"
       ? theme
       : "system";
 
   const SelectedThemeIcon = resolvedTheme === "dark" ? Moon : Sun;
+
+  if (!isMounted) {
+    return (
+      <Button variant="ghost" size="icon" aria-label="Choose theme">
+        <Monitor size={16} strokeWidth={1.75} aria-hidden="true" />
+      </Button>
+    );
+  }
 
   return (
     <DropdownMenu>

@@ -15,7 +15,7 @@ This block is written and re-added by `next dev` — verify at `node_modules/nex
 - Use clear, meaningful names for variables, functions, and components.
 - Prefer named exports for components and utilities.
 - Build reusable UI with Shadcn UI and Tailwind CSS whenever needed.
-- Use Framer Motion for subtle motion and dnd-kit for drag-and-drop.
+- Use Motion for subtle motion and dnd-kit for drag-and-drop.
 - Keep components simple, readable, and maintainable.
 - Do not use emoji in code, UI text, or comments.
 - Use generated Supabase types for database and API payloads when available.

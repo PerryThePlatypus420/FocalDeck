@@ -8,7 +8,9 @@ The interface should feel like a high-end product tool: calm, structured, and ef
 ---
 
 ## 2. Design Principles
-- Dark mode first, with a clean light mode option later
+- Support light, dark, and system themes
+- Use the system theme by default
+- Keep the visual language consistent across all themes
 - Dense but readable layout
 - Minimal visual noise
 - Clear hierarchy and strong spacing
@@ -25,7 +27,7 @@ The design direction is built around the following stack:
 - TypeScript
 - Tailwind CSS
 - Shadcn UI
-- Framer Motion
+- Motion
 - dnd-kit
 - Lucide React
 - Supabase for auth, realtime, and storage where relevant
@@ -67,7 +69,7 @@ The interface should prioritize clarity and density without feeling cramped.
 ---
 
 ## 6. Color System
-### Dark mode (default)
+### Dark mode
 - Background: #090d16
 - Surface: #0e1422
 - Surface elevated: #161e31
@@ -76,7 +78,7 @@ The interface should prioritize clarity and density without feeling cramped.
 - Text muted: #94a3b8
 - Border: #1e293b
 
-### Light mode (secondary)
+### Light mode
 - Background: #f8fafc
 - Surface: #ffffff
 - Primary accent: #2563eb
@@ -122,7 +124,7 @@ These should be used as soft status pills, not loud full-color blocks.
 
 ## 8. Motion & Interaction Design
 ### Motion library
-- Framer Motion will be used for transitions and micro-interactions
+- Motion will be used for transitions and micro-interactions
 
 ### Interaction principles
 - Small, smooth transitions are preferred over large animations

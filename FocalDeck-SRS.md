@@ -75,7 +75,6 @@ These roles are not meant to be over-engineered at this stage. They simply defin
 
 ### Design requirements
 - The interface should feel premium and modern
-- The app should use a dark-first aesthetic
 - The product should feel fast and efficient
 - Motion should be subtle and polished
 - The layout should stay visually clean and structured
@@ -85,7 +84,7 @@ These roles are not meant to be over-engineered at this stage. They simply defin
 - TypeScript will be used for a safer developer workflow
 - Tailwind CSS will be used for styling
 - Shadcn UI will be used for reusable UI components
-- Framer Motion will be used for subtle transitions and interface motion
+- Motion will be used for subtle transitions and interface motion
 - dnd-kit will be used for drag-and-drop interactions
 - Lucide React will be used for icons
 - Supabase may be used for auth, realtime, and storage depending on implementation decisions
@@ -128,5 +127,5 @@ This keeps the product direction clear while leaving implementation details flex
 ---
 
 ## 10. Summary
-FocalDeck is a project management dashboard with a premium, dark-first look and a strong kanban workflow. It combines practical project organization with modern frontend tools and a focused user experience.
+FocalDeck is a project management dashboard with a premium look and a strong kanban workflow. It combines practical project organization with modern frontend tools and a focused user experience.
 

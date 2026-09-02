@@ -1,6 +1,7 @@
 # FocalDeck — Design Direction
 
 ## 1. Product Vision
+
 FocalDeck is a modern project and team workflow dashboard designed to feel sharp, focused, and premium. The overall goal is to give people a clean place to manage tasks, move work across a board, see workload, and stay organized without visual clutter.
 
 The interface should feel like a high-end product tool: calm, structured, and efficient.
@@ -8,6 +9,7 @@ The interface should feel like a high-end product tool: calm, structured, and ef
 ---
 
 ## 2. Design Principles
+
 - Support light, dark, and system themes
 - Use the system theme by default
 - Keep the visual language consistent across all themes
@@ -21,6 +23,7 @@ The interface should feel like a high-end product tool: calm, structured, and ef
 ---
 
 ## 3. Stack & Design Tools
+
 The design direction is built around the following stack:
 
 - Next.js
@@ -37,15 +40,18 @@ These tools support a modern, focused, and consistent product experience.
 ---
 
 ## 4. Visual Style
+
 ### Brand vibe
+
 - Modern
 - High-density
 - Crisp and structured
 - Enterprise-leaning but not overly corporate
-- Inspired by clean productivity tools and dark dashboard products
+- Inspired by clean productivity tools and modern dashboard products
 
 ### Core aesthetic
-- Dark surfaces with controlled contrast
+
+- Surfaces with controlled contrast
 - Muted cards and panels
 - Strong cobalt accent highlights
 - Thin borders and clean dividers
@@ -54,10 +60,12 @@ These tools support a modern, focused, and consistent product experience.
 ---
 
 ## 5. Typography
+
 - Primary font: Geist Sans or Inter
 - Monospace font: Geist Mono or JetBrains Mono
 
 ### Suggested scale
+
 - Page title: 24px, 700
 - Section headers: 18px, 600
 - Card titles: 14px, 500
@@ -69,7 +77,9 @@ The interface should prioritize clarity and density without feeling cramped.
 ---
 
 ## 6. Color System
+
 ### Dark mode
+
 - Background: #090d16
 - Surface: #0e1422
 - Surface elevated: #161e31
@@ -79,6 +89,7 @@ The interface should prioritize clarity and density without feeling cramped.
 - Border: #1e293b
 
 ### Light mode
+
 - Background: #f8fafc
 - Surface: #ffffff
 - Primary accent: #2563eb
@@ -87,6 +98,7 @@ The interface should prioritize clarity and density without feeling cramped.
 - Border: #e2e8f0
 
 ### Status colors
+
 - Urgent: red
 - High: orange
 - Medium: amber
@@ -99,23 +111,28 @@ These should be used as soft status pills, not loud full-color blocks.
 ---
 
 ## 7. Layout & Components
+
 ### General layout rules
+
 - Keep surfaces separated with subtle borders
 - Use rounded corners for cards and inputs
 - Use a dense desktop layout first
 - Preserve strong visual hierarchy between sidebar, content, and panels
 
 ### Sidebar
+
 - Fixed width layout
 - Clearly active item styling
 - Minimal visual weight, strong hover states
 
 ### Kanban board
+
 - Columns should be compact but readable
 - Card content should stay clean and scannable
 - Drag target states should be obvious but not visually noisy
 
 ### Cards
+
 - Clear title, tags, metadata, and action affordances
 - Subtle hover elevation
 - Good spacing between content blocks
@@ -123,16 +140,20 @@ These should be used as soft status pills, not loud full-color blocks.
 ---
 
 ## 8. Motion & Interaction Design
+
 ### Motion library
+
 - Motion will be used for transitions and micro-interactions
 
 ### Interaction principles
+
 - Small, smooth transitions are preferred over large animations
 - Dragging and reordering should feel snappy and responsive
 - Hover states should add subtle elevation, not dramatic motion
 - Modals and side panels should feel fluid and calm
 
 ### Suggested motion style
+
 - Spring-based transitions for movement and layout updates
 - Gentle scale and fade for overlays and cards
 - Use motion to reinforce hierarchy, not to distract from the task
@@ -140,10 +161,13 @@ These should be used as soft status pills, not loud full-color blocks.
 ---
 
 ## 9. Drag-and-Drop Behavior
+
 ### Library
+
 - dnd-kit for task and column interactions
 
 ### Desired behavior
+
 - Smooth task movement between columns
 - Clear drop target feedback
 - Keyboard accessibility should be considered as the interaction is built
@@ -152,6 +176,7 @@ These should be used as soft status pills, not loud full-color blocks.
 ---
 
 ## 10. Iconography
+
 - Use Lucide React for a clean, consistent icon system
 - Keep icon sizes consistent based on usage:
   - small UI actions: 16px
@@ -161,9 +186,11 @@ These should be used as soft status pills, not loud full-color blocks.
 ---
 
 ## 11. Responsive Guidance
+
 The UI should be designed primarily for desktop use, with responsive adjustments for smaller screens later. The goal is to keep the board readable and usable on laptops and tablets without breaking the core visual hierarchy.
 
 General principles:
+
 - preserve clear spacing and readability
 - collapse or simplify non-essential side content when needed
 - maintain touch-friendly controls on smaller screens
@@ -172,6 +199,7 @@ General principles:
 ---
 
 ## 12. Accessibility Baseline
+
 - Use strong focus states for interactive elements
 - Keep text contrast comfortable in both dark and light themes
 - Ensure interactive targets are large enough for usability
@@ -180,7 +208,7 @@ General principles:
 ---
 
 ## 13. Summary
-FocalDeck should feel premium, streamlined, and highly functional. The design language is dark-first, compact, modern, and built for productivity. The visual system is intentionally clean so that the core workflow — planning, moving, assigning, and tracking work — remains the focus.
+
+FocalDeck should feel premium, streamlined, and highly functional. The design language is compact, modern, and built for productivity. The visual system is intentionally clean so that the core workflow — planning, moving, assigning, and tracking work — remains the focus.
 
 The app should feel fast, serious, and easy to trust.
-

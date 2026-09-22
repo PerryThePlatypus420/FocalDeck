@@ -118,6 +118,15 @@ export async function signInWithEmail(email: string, password: string) {
 }
 
 /**
+ * Sign out the current user
+ */
+export async function signOut() {
+  const supabase = await createClient();
+  await supabase.auth.signOut();
+  redirect("/signin");
+}
+
+/**
  * Sign in with Google OAuth
  */
 export async function signInWithGoogle() {

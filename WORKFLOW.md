@@ -1,8 +1,10 @@
 # FocalDeck — User Workflow & Architecture
 
-**Version:** 1.0  
-**Last Updated:** 2026-09-02  
+**Version:** 1.2  
+**Last Updated:** 2026-09-21  
 **Status:** LOCKED (Core workflow defined, will evolve with features)
+
+**v1.2 change:** replaced public/private project visibility with a Jira-style model -- projects have no visibility flag; a project is invisible to everyone except its explicit members, and Owner/Manager/Admin (who retain full oversight of every project in their workspace). This supersedes v1.1's Guest role, which existed only to work around public/private leaking visibility -- that problem no longer exists, so Guest was removed and project-level invites (Step 6b) now simply grant `member`.
 
 ---
 
@@ -59,7 +61,7 @@ On creation:
 User sees:
 
 - Workspace name & description
-- List of projects (public + private projects they have access to)
+- List of projects: Owner/Manager/Admin see every project in the workspace; a Member sees only the projects they're an explicit member of
 - Empty state if no projects: "Create Project" button
 - Workspace members sidebar (who's invited)
 - Analytics for this workspace
@@ -91,9 +93,6 @@ User (workspace owner/admin) inputs:
 
 - Project name (required)
 - Project description (optional)
-- **Visibility:**
-  - `public` — All workspace members can view & access
-  - `private` — Only project members can view & access
 - **Kanban Configuration:**
   - Default columns shown: "To Do", "In Progress", "Review", "Done"
   - User can edit: add, remove, rename columns
@@ -102,8 +101,20 @@ User (workspace owner/admin) inputs:
 On creation:
 
 - Project created with user as `lead`
-- If private, only creator is initially a member
+- There is no visibility toggle -- the project is invisible to everyone in the workspace except its members (plus Owner/Manager/Admin, who can always see it). Only creator is initially a member; add others via Step 6b or the project's member list.
 - Redirected to project board
+
+### **Step 6b: Invite Directly to a Project (TODO)**
+
+**Modal/Form:** Invite to Project (available to the project Lead, without needing workspace Owner/Admin permissions)
+
+This is the primary way rank-and-file employees get access to a specific project -- since projects aren't browsable by default (Jira-style, see Permission Matrix), being added here is what makes the project visible to them at all.
+
+Options mirror Step 5 (email or copy link), but the invite is scoped to a project:
+
+- Inviter picks a **project role**: `lead` / `contributor`
+- If the invitee isn't already a workspace member, accepting grants them base `member` access (never `admin`/`manager`)
+- If the invitee is already a workspace member, accepting only adds project membership; their existing workspace role is never downgraded
 
 ### **Step 7: Project View — Kanban Board (TODO)**
 
@@ -166,8 +177,10 @@ Users can:
 Owner (sole authority, cannot be removed without succession)
   └─ Manager (delegated authority, for temporary oversight)
        └─ Admin (administrative privileges)
-            └─ Member (base access)
+            └─ Member (base access, sees only projects they're explicitly added to)
 ```
+
+Owner/Manager/Admin additionally see and can administer every project in the workspace, even ones they aren't a member of -- this is the one place workspace role grants project visibility. See "Project Visibility" below.
 
 #### Workspace Role Permissions
 
@@ -183,7 +196,18 @@ Owner (sole authority, cannot be removed without succession)
 | Transfer Owner role to another user        | Yes   | No      | No    | No     |
 | Delete workspace                           | Yes   | No      | No    | No     |
 | Edit workspace settings                    | Yes   | Yes     | Yes   | No     |
-| Change project visibility (public/private) | Yes   | Yes     | Yes   | No     |
+| See/administer every project in workspace  | Yes   | Yes     | Yes   | No     |
+
+#### Project Visibility (Jira-style, no public/private)
+
+**Purpose:** An employee working on Project A should not see who's assigned what, or that Project B even exists, unless they're explicitly on it. This is stricter than the original public/private design (v1.0/v1.1), which let any workspace Member browse every "public" project.
+
+**Rule:** a project is visible only to:
+
+1. Its own `project_members` (Lead/Contributor), and
+2. Owner/Manager/Admin of the parent workspace (for oversight -- they can always create/delete/reassign any project and need workspace-wide analytics)
+
+A plain `member` who isn't on a project can't see it, its tasks, its board, or its member list -- full stop. There's no per-project setting to change this; it's the only mode. Getting added to a project (Step 6b, or the project's member list) is what grants visibility, matching how a Jira user only browses projects they've been given project-level access to, regardless of general site access.
 
 #### Manager Role (Special Governance Role)
 
@@ -230,8 +254,7 @@ Discussed for Phase 2+ implementation:
 
 | Permission                | Lead | Contributor |
 | ------------------------- | ---- | ----------- |
-| View project (if public)  | Yes  | Yes         |
-| View project (if private) | Yes  | Yes         |
+| View project              | Yes  | Yes         |
 | Create tasks              | Yes  | Yes         |
 | Edit tasks                | Yes  | Yes         |
 | Delete tasks              | Yes  | Yes         |
@@ -240,7 +263,6 @@ Discussed for Phase 2+ implementation:
 | Invite members            | Yes  | No          |
 | Remove members            | Yes  | No          |
 | Configure columns         | Yes  | No          |
-| Change project visibility | Yes  | No          |
 | Delete project            | Yes  | No          |
 
 ### Task-Level Permissions
@@ -259,7 +281,8 @@ User (authenticated)
   │   ├─ Owner - Full control, manages other owners, cannot leave without succession
   │   ├─ Manager - Delegated authority, broad admin-like access, no owner assignment
   │   ├─ Admin - Administrative access, manages members and projects
-  │   ├─ Member - Base access, limited to assigned work
+  │   ├─ Member - Base access, sees only projects they're explicitly added to
+  │   │   (Owner/Manager/Admin are the exception: they see every project)
   │   │
   │   ├─ Project (Lead/Contributor)
   │   │   ├─ Task (assigned to user)
@@ -282,8 +305,8 @@ User (authenticated)
 - Container for projects and team
 - Must have at least one Owner at all times
 - Has Owner(s), Manager(s), Admin(s), and Members
-- Can have public/private projects
-- Analytics aggregated from all projects
+- Owner/Manager/Admin see every project in the workspace; Members only see projects they're explicitly added to (see "Project Visibility" in Permission Matrix)
+- Analytics aggregated from all projects (visible to Owner/Manager/Admin; a Member's dashboard only aggregates their own projects)
 - Owner succession is required when owner attempts to leave
 
 **Workspace Roles Detailed:**
@@ -291,16 +314,16 @@ User (authenticated)
 - Owner: Full governance control, must assign successor before leaving
 - Manager: Delegated authority, broad access but cannot assign owners or delete workspace
 - Admin: Can manage members, create/delete projects, edit settings
-- Member: Base access, limited to personal work assignments
+- Member: Base access, limited to personal work assignments; sees only the projects they're an explicit member of
 
 **Project**
 
 - Belongs to a workspace
 - Has Leads and Contributors
-- Can be public (all workspace members see) or private (members only)
+- Not browsable by default -- visible only to its members plus the workspace's Owner/Manager/Admin (no public/private toggle)
 - Has customizable Kanban columns
 - Tracks tasks
-- Only Leads can add/remove project members and change visibility
+- Only Leads can add/remove project members
 
 **Task**
 
@@ -328,7 +351,7 @@ User (authenticated)
 - Workspace CRUD (create, read, list, update)
 - Workspace Owner role with succession requirement
 - Invite workspace members (email + link, with role selection restricted to non-Owner)
-- Project CRUD with public/private visibility
+- Project CRUD with per-project (Jira-style) membership visibility
 - Kanban board with drag-and-drop (dnd-kit)
 - Task CRUD (create, read, update, delete)
 - Task assignment
@@ -455,8 +478,8 @@ Which events trigger real-time updates?
 
 - [ ] User can create workspace
 - [ ] Invited user receives email and can join
-- [ ] Public project visible to all workspace members
-- [ ] Private project visible only to members
+- [ ] A Member cannot see a project they aren't added to (not in list, not via direct URL)
+- [ ] Owner/Manager/Admin can see every project in the workspace regardless of membership
 - [ ] Only leads can invite/manage project members
 - [ ] Task changes appear in real-time for all viewing
 - [ ] Task assigned → assignee notified

@@ -7,6 +7,11 @@ export const metadata: Metadata = {
   description: "Create your FocalDeck account.",
 };
 
-export default function SignUpPage() {
-  return <AuthForm mode="signup" />;
+interface SignUpPageProps {
+  searchParams: Promise<{ redirect?: string }>;
+}
+
+export default async function SignUpPage({ searchParams }: SignUpPageProps) {
+  const { redirect } = await searchParams;
+  return <AuthForm mode="signup" redirectTo={redirect} />;
 }

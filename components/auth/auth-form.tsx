@@ -26,6 +26,7 @@ type AuthMode = "signin" | "signup";
 
 type AuthFormProps = {
   mode: AuthMode;
+  redirectTo?: string;
 };
 
 const authContent = {
@@ -47,9 +48,12 @@ const authContent = {
   },
 } as const;
 
-export function AuthForm({ mode }: AuthFormProps) {
+export function AuthForm({ mode, redirectTo }: AuthFormProps) {
   const content = authContent[mode];
   const isSignUp = mode === "signup";
+  const alternateHref = redirectTo
+    ? `${content.alternateHref}?redirect=${encodeURIComponent(redirectTo)}`
+    : content.alternateHref;
 
   // Form input state
   const [formData, setFormData] = useState({
@@ -87,8 +91,9 @@ export function AuthForm({ mode }: AuthFormProps) {
             formData.password,
             formData.confirmPassword,
             formData.fullName,
+            redirectTo,
           )
-        : await signInWithEmail(formData.email, formData.password);
+        : await signInWithEmail(formData.email, formData.password, redirectTo);
 
       if (!result.success) {
         setError(result.error || "An error occurred");
@@ -373,7 +378,7 @@ export function AuthForm({ mode }: AuthFormProps) {
         <p className="mt-6 text-center text-sm text-muted-foreground">
           {content.alternatePrompt}{" "}
           <Link
-            href={content.alternateHref}
+            href={alternateHref}
             className="font-medium text-foreground transition-colors hover:text-primary"
           >
             {content.alternateLabel}

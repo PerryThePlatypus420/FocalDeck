@@ -94,6 +94,13 @@ export type Database = {
             referencedRelation: "projects"
             referencedColumns: ["id"]
           },
+          {
+            foreignKeyName: "project_members_user_id_profiles_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
         ]
       }
       projects: {
@@ -136,6 +143,7 @@ export type Database = {
       }
       tasks: {
         Row: {
+          archived_at: string | null
           assignee_id: string | null
           column_id: string
           created_at: string
@@ -150,6 +158,7 @@ export type Database = {
           updated_at: string
         }
         Insert: {
+          archived_at?: string | null
           assignee_id?: string | null
           column_id: string
           created_at?: string
@@ -164,6 +173,7 @@ export type Database = {
           updated_at?: string
         }
         Update: {
+          archived_at?: string | null
           assignee_id?: string | null
           column_id?: string
           created_at?: string
@@ -178,6 +188,13 @@ export type Database = {
           updated_at?: string
         }
         Relationships: [
+          {
+            foreignKeyName: "tasks_assignee_id_profiles_fkey"
+            columns: ["assignee_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
           {
             foreignKeyName: "tasks_column_id_fkey"
             columns: ["column_id"]
@@ -327,6 +344,7 @@ export type Database = {
         Args: { p_project_id: string; p_user_id: string }
         Returns: boolean
       }
+      get_invite_preview: { Args: { p_token: string }; Returns: Json }
       get_project_role: {
         Args: { p_project_id: string; p_user_id: string }
         Returns: Database["public"]["Enums"]["project_role"]

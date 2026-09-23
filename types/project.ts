@@ -11,3 +11,17 @@ export interface ProjectSummary {
   description: string | null;
   role: ProjectRole | null;
 }
+
+export interface ProjectDetail {
+  id: string;
+  workspaceId: string;
+  name: string;
+  description: string | null;
+}
+
+export interface ProjectMemberOption {
+  userId: string;
+  fullName: string | null;
+  email: string;
+  role: ProjectRole;
+}

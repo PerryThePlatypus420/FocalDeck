@@ -18,6 +18,16 @@ function validatePassword(password: string): boolean {
   return password.length >= 8;
 }
 
+// Only ever redirect to a same-origin path (e.g. "/invite/abc123") -- this
+// comes from a URL query param, so without this an attacker could craft a
+// link like ?redirect=https://evil.com or ?redirect=//evil.com.
+function sanitizeRedirect(path: string | undefined): string {
+  if (!path || !path.startsWith("/") || path.startsWith("//")) {
+    return "/dashboard";
+  }
+  return path;
+}
+
 /**
  * Sign up with email and password
  */
@@ -26,6 +36,7 @@ export async function signUpWithEmail(
   password: string,
   confirmPassword: string,
   fullName: string,
+  redirectTo?: string,
 ) {
   // Validate inputs
   if (!email || !password || !confirmPassword || !fullName) {
@@ -75,13 +86,17 @@ export async function signUpWithEmail(
   }
 
   // Redirect on success (outside try-catch so it's not caught)
-  redirect("/dashboard");
+  redirect(sanitizeRedirect(redirectTo));
 }
 
 /**
  * Sign in with email and password
  */
-export async function signInWithEmail(email: string, password: string) {
+export async function signInWithEmail(
+  email: string,
+  password: string,
+  redirectTo?: string,
+) {
   // Validate inputs
   if (!email || !password) {
     return { success: false, error: "Email and password are required" };
@@ -114,7 +129,7 @@ export async function signInWithEmail(email: string, password: string) {
   }
 
   // Redirect on success (outside try-catch so it's not caught)
-  redirect("/dashboard");
+  redirect(sanitizeRedirect(redirectTo));
 }
 
 /**

@@ -7,6 +7,11 @@ export const metadata: Metadata = {
   description: "Sign in to your FocalDeck workspace.",
 };
 
-export default function SignInPage() {
-  return <AuthForm mode="signin" />;
+interface SignInPageProps {
+  searchParams: Promise<{ redirect?: string }>;
+}
+
+export default async function SignInPage({ searchParams }: SignInPageProps) {
+  const { redirect } = await searchParams;
+  return <AuthForm mode="signin" redirectTo={redirect} />;
 }

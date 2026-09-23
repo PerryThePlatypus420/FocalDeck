@@ -11,6 +11,7 @@ import {
 import { createClient } from "@/lib/supabase/server";
 import { Button } from "@/components/ui/button";
 import { CreateProjectDialog } from "@/components/workspace/create-project-dialog";
+import { InviteMemberDialog } from "@/components/invites/invite-member-dialog";
 import { MemberList } from "@/components/workspace/member-list";
 import { ProjectCard } from "@/components/workspace/project-card";
 
@@ -95,9 +96,23 @@ export default async function WorkspacePage({ params }: WorkspacePageProps) {
         </div>
 
         <div className="flex flex-col gap-3">
-          <h2 className="text-lg font-semibold text-foreground">
-            Members ({members.length})
-          </h2>
+          <div className="flex items-center justify-between">
+            <h2 className="text-lg font-semibold text-foreground">
+              Members ({members.length})
+            </h2>
+            {(workspace.role === "owner" ||
+              workspace.role === "manager" ||
+              workspace.role === "admin") && (
+              <InviteMemberDialog
+                workspaceId={workspace.id}
+                trigger={
+                  <Button variant="ghost" size="sm">
+                    Invite
+                  </Button>
+                }
+              />
+            )}
+          </div>
           <MemberList members={members} />
         </div>
       </div>

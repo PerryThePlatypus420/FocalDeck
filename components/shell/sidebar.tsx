@@ -9,6 +9,7 @@ import {
   type LucideIcon,
 } from "lucide-react";
 
+import { getInitials } from "@/lib/format";
 import { cn } from "@/lib/utils";
 import { signOut } from "@/app/actions/auth";
 import { ThemeSwitcher } from "@/components/theme-switcher";
@@ -163,15 +164,4 @@ export function Sidebar({ userName, userEmail, workspaces }: SidebarProps) {
       </div>
     </aside>
   );
-}
-
-function getInitials(name: string): string {
-  const initials = name
-    .trim()
-    .split(/\s+/)
-    .slice(0, 2)
-    .map((part) => part[0]?.toUpperCase() ?? "")
-    .join("");
-
-  return initials || "?";
 }

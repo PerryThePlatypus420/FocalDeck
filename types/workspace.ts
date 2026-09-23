@@ -12,3 +12,18 @@ export interface WorkspaceSummary {
   role: WorkspaceRole;
   memberCount: number;
 }
+
+// The single-workspace view model for /workspace/[workspaceId].
+export interface WorkspaceDetail {
+  id: string;
+  name: string;
+  description: string | null;
+  role: WorkspaceRole;
+}
+
+export interface WorkspaceMemberSummary {
+  userId: string;
+  fullName: string | null;
+  email: string;
+  role: WorkspaceRole;
+}

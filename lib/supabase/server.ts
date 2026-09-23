@@ -1,5 +1,6 @@
 import { createServerClient } from "@supabase/ssr";
 import { cookies } from "next/headers";
+import { cache } from "react";
 
 import type { Database } from "@/types/database.types";
 
@@ -16,7 +17,10 @@ function getSupabaseEnvironment() {
   return { supabaseUrl, supabasePublishableKey };
 }
 
-export async function createClient() {
+// Cached per request: a shared layout and its page both need a client (and
+// the auth check built on top of it), so this avoids re-parsing cookies and
+// re-issuing identical Supabase calls twice for the same request.
+export const createClient = cache(async () => {
   const cookieStore = await cookies();
   const { supabaseUrl, supabasePublishableKey } = getSupabaseEnvironment();
 
@@ -36,4 +40,4 @@ export async function createClient() {
       },
     },
   });
-}
+});

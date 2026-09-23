@@ -1,14 +1,17 @@
 import type { SupabaseClient } from "@supabase/supabase-js";
+import { cache } from "react";
 
 import type { Database } from "@/types/database.types";
 import type { WorkspaceSummary } from "@/types/workspace";
 
 type TypedSupabaseClient = SupabaseClient<Database>;
 
-export async function getWorkspaceSummaries(
+// Cached per request: both the (app) layout (workspace switcher) and the
+// dashboard page (workspace cards) need this same list.
+export const getWorkspaceSummaries = cache(async (
   supabase: TypedSupabaseClient,
   userId: string,
-): Promise<WorkspaceSummary[]> {
+): Promise<WorkspaceSummary[]> => {
   const { data: memberships, error } = await supabase
     .from("workspace_members")
     .select("role, workspaces(id, name, description)")
@@ -36,7 +39,7 @@ export async function getWorkspaceSummaries(
         memberCount: memberCounts.get(workspace.id) ?? 0,
       };
     });
-}
+});
 
 async function getMemberCounts(
   supabase: TypedSupabaseClient,

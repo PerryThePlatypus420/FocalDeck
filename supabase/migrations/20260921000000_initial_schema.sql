@@ -245,6 +245,25 @@ create trigger on_project_created
 after insert on public.projects
 for each row execute function public.handle_new_project();
 
+-- Deleting a project cascades to both `tasks` and `project_columns`, but
+-- `tasks.column_id` REFERENCES `project_columns` ON DELETE RESTRICT (so a
+-- direct "delete this single column" action can't silently orphan/destroy
+-- tasks). Postgres doesn't guarantee the tasks cascade runs before the
+-- project_columns cascade when both fire from the same parent delete, which
+-- would make that RESTRICT spuriously block deleting a whole project. This
+-- forces the order: tasks are gone before the standard cascades even start.
+create or replace function public.cleanup_project_tasks()
+returns trigger language plpgsql security definer set search_path = public as $$
+begin
+  delete from public.tasks where project_id = OLD.id;
+  return OLD;
+end;
+$$;
+
+create trigger projects_cleanup_tasks_before_delete
+before delete on public.projects
+for each row execute function public.cleanup_project_tasks();
+
 -- Enforces WORKFLOW.md's owner-succession rule: a workspace can never be left
 -- without at least one Owner (blocks removing/demoting the last Owner).
 create or replace function public.enforce_owner_succession()
@@ -254,6 +273,14 @@ declare
 begin
   if TG_OP = 'DELETE' then
     if OLD.role = 'owner' then
+      -- If the workspace itself is being deleted, this DELETE is just the
+      -- ON DELETE CASCADE from workspaces -- there's no workspace left to
+      -- require an owner for, so let it through. By the time a cascaded
+      -- child delete fires, the parent row is already gone.
+      if not exists (select 1 from public.workspaces where id = OLD.workspace_id) then
+        return OLD;
+      end if;
+
       select count(*) into remaining_owners
       from public.workspace_members
       where workspace_id = OLD.workspace_id and role = 'owner' and user_id <> OLD.user_id;
@@ -431,8 +458,14 @@ alter table public.tasks enable row level security;
 
 -- workspaces --------------------------------------------------------------
 
+-- `or created_by = auth.uid()` matters, not just belt-and-suspenders: a
+-- RETURNING clause (as in `.insert(...).select()`) is checked against this
+-- SELECT policy using the row's state *before* the on_workspace_created
+-- trigger's side effect (adding the creator to workspace_members) becomes
+-- visible to it, so relying on is_workspace_member() alone here makes the
+-- very first insert-and-return-the-new-row call fail RLS.
 create policy workspaces_select on public.workspaces
-for select using (public.is_workspace_member(id, auth.uid()));
+for select using (public.is_workspace_member(id, auth.uid()) or created_by = auth.uid());
 
 create policy workspaces_insert on public.workspaces
 for insert with check (created_by = auth.uid());
@@ -498,8 +531,11 @@ for delete using (
 
 -- projects --------------------------------------------------------------
 
+-- Same RETURNING-vs-trigger-timing reasoning as workspaces_select above:
+-- the on_project_created trigger's project_members insert isn't visible to
+-- this check yet when `.insert(...).select()` evaluates it.
 create policy projects_select on public.projects
-for select using (public.can_view_project(id, auth.uid()));
+for select using (public.can_view_project(id, auth.uid()) or created_by = auth.uid());
 
 create policy projects_insert on public.projects
 for insert with check (
